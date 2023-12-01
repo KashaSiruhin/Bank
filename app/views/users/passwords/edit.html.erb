@@ -1,3 +1,8 @@
+<%= link_to "Courses", :courses %>
+<%= link_to "New course", new_course_path %>
+<%= link_to "Profile", :profile %>
+
+
 <h2>Change your password</h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
