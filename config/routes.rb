@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/profile/teacher', to: "home#teacher", as: :teacher_page
   get '/courses/add/:id', to: "courses#add", as: :add_course
   get '/courses/remove/:id', to: "courses#remove", as: :remove_course
   resources :courses

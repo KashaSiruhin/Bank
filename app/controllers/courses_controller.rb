@@ -14,11 +14,24 @@ class CoursesController < ApplicationController
   def new
     authenticate_user! unless user_signed_in?
     @course = Course.new
+
+    begin
+      authorize @course
+    rescue Pundit::NotAuthorizedError
+      redirect_to root_path
+      return
+    end
   end
 
   # GET /courses/1/edit
   def edit
     authenticate_user! unless user_signed_in?
+    begin
+      authorize @course
+    rescue Pundit::NotAuthorizedError
+      redirect_to root_path
+      return
+    end
   end
 
   # POST /courses or /courses.json
@@ -52,6 +65,12 @@ class CoursesController < ApplicationController
   # DELETE /courses/1 or /courses/1.json
   def destroy
     authenticate_user! unless user_signed_in?
+    begin
+      authorize @course
+    rescue Pundit::NotAuthorizedError
+      redirect_to root_path
+      return
+    end
     @course.destroy!
 
     respond_to do |format|
@@ -75,14 +94,16 @@ class CoursesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_course
-      @course = Course.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def course_params
-      authenticate_user! unless user_signed_in?
-      params.require(:course).permit(:name, :description, :duration, :price)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_course
+    @course = Course.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def course_params
+    authenticate_user! unless user_signed_in?
+    params.require(:course).permit(:name, :description, :duration, :price, :owner)
+          .with_defaults(owner: current_user.id)
+  end
 end

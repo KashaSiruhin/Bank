@@ -1,21 +1,14 @@
 <%= link_to "Courses", :courses %>
 <%= link_to "New course", new_course_path %>
 <%= link_to "Profile", :profile %>
-<% if current_user.teacher? %>
-  <%= link_to "Teacher", :teacher_page %>
-<% end %>
-
-<h1>Профиль</h1>
-
-<%= button_to "Quit", destroy_user_session_path, id: current_user.id, method: :delete %>
-<%= link_to "Edit profile", edit_user_registration_path, class: 'show_profile' %>
 
 <div id="courses">
-  <h2>Курсы на которые я записан</h2>
+  <h2>Курсы на которых я преподаю</h2>
   <% @courses.each do |course| %>
     <%= render course %>
     <p>
       <%= link_to "Show this course", course %>
+      <%= link_to "Edit this course", edit_course_path(course) %>
       <%= link_to "Remove this course", controller: "courses", action: "remove", id: course.id %>
     </p>
   <% end %>
